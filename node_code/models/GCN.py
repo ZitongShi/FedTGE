@@ -54,7 +54,7 @@ class GCN(nn.Module):
         self.layer_norm_first = layer_norm_first
         self.use_ln = use_ln
 
-        self._initialize_weights()  # 初始化权重
+        self._initialize_weights()  
 
     def _initialize_weights(self):
         for m in self.modules():
@@ -104,7 +104,7 @@ class GCN(nn.Module):
 
     def fit(self, global_model, features, edge_index, edge_weight, aug_edge_index, aug_edge_weight, labels, idx_train,
             args, idx_val=None, train_iters=200, verbose=False):
-        set_random_seed(args.seed)  # 在模型初始化时设置种子
+        set_random_seed(args.seed)  
 
         self.edge_index, self.edge_weight = edge_index, edge_weight  # Original graph
         self.aug_edge_index, self.aug_edge_weight = aug_edge_index, aug_edge_weight  # Augmented graph
@@ -125,7 +125,7 @@ class GCN(nn.Module):
         optimizer = optim.Adam(self.parameters(), lr=self.lr, weight_decay=self.weight_decay)
 
         for i in range(train_iters):
-            set_random_seed(args.seed + i)  # 为每个训练步骤设置种子
+            set_random_seed(args.seed + i)  
             optimizer.zero_grad()
             output = self.forward(self.features, self.edge_index, self.edge_weight)
             loss_train = F.nll_loss(output[idx_train], labels[idx_train])
@@ -147,7 +147,7 @@ class GCN(nn.Module):
         best_acc_val = -10
 
         for i in range(train_iters):
-            set_random_seed(args.seed + i)  # 为每个训练步骤设置种子
+            set_random_seed(args.seed + i)  
             self.train()
             optimizer.zero_grad()
             output = self.forward(features, edge_index, edge_weight)
@@ -180,7 +180,7 @@ class GCN(nn.Module):
         bn_params = []
         num_nodes = features.size(0)
         for name, param in self.named_parameters():
-            if 'lns' in name:  # LayerNorm层
+            if 'lns' in name:  
                 bn_params.append(param)
         optimizer = optim.Adam(bn_params, lr=self.lr, weight_decay=self.weight_decay)
         self.train()
